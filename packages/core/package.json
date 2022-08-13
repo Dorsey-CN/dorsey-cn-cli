@@ -1,12 +1,12 @@
 {
   "name": "@dorsey-cli-cn/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "dorsey-cli-cn core",
   "author": "dorsey <406100205@qq.com>",
   "homepage": "",
   "license": "ISC",
   "main": "lib/index.js",
-  "bin" : {
+  "bin": {
     "dorsey-cli-cn": "bin/index.js"
   },
   "directories": {
@@ -23,6 +23,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@dorsey-cli-cn/utils": "^1.0.0"
+    "@dorsey-cli-cn/utils": "^1.0.1"
   }
 }
