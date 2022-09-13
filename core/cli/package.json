@@ -1,6 +1,6 @@
 {
   "name": "@dorsey-cli-cn/core",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "dorsey-cli-cn core",
   "author": "dorsey <406100205@qq.com>",
   "homepage": "",
@@ -16,13 +16,19 @@
   "files": [
     "lib"
   ],
-  "scripts": {
-    "test": "node ./__tests__/core.test.js"
-  },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@dorsey-cli-cn/utils": "^1.0.1"
+    "@dorsey-cli-cn/get-npm-info": "file:../../utils/get-npm-info",
+    "@dorsey-cli-cn/log": "file:../../utils/log",
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.2",
+    "import-local": "^3.1.0",
+    "minimist": "^1.2.6",
+    "npmlog": "^6.0.2",
+    "path-exists": "^4.0.0",
+    "root-check": "^1.0.0",
+    "semver": "^7.3.7"
   }
 }
