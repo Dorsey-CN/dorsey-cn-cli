@@ -1,7 +1,7 @@
 {
-  "name": "@dorsey-cli-cn/log",
-  "version": "1.0.1",
-  "description": "@dorsey-cli-cn log",
+  "name": "@dorsey-cli-cn/path-format",
+  "version": "1.0.0",
+  "description": "dorsey-cli-cn path-format",
   "author": "dorsey <406100205@qq.com>",
   "homepage": "https://github.com/Dorsey-CN/dorsey-cn-cli#readme",
   "license": "ISC",
@@ -21,15 +21,9 @@
     "url": "git+https://github.com/Dorsey-CN/dorsey-cn-cli.git"
   },
   "scripts": {
-    "test": "node ./__tests__/@dorsey-cli-cn/log.test.js"
+    "test": "node ./__tests__/@dorsey-cli-cn/path-format.test.js"
   },
   "bugs": {
     "url": "https://github.com/Dorsey-CN/dorsey-cn-cli/issues"
-  },
-  "dependencies": {
-    "npmlog": "^6.0.2"
-  },
-  "devDependencies": {
-    "@types/node": "^18.8.0"
   }
 }

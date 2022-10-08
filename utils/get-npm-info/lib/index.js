@@ -74,7 +74,24 @@ async function getNpmSemverVersion(name, baseVersion, registry) {
   return null;
 }
 
+/**
+ * 获取最新版本号
+ * @param {*} name 依赖库名称
+ * @param {*} registry 依赖源
+ * @returns
+ */
+async function getNpmLatestVersion(name, registry) {
+  const versions = await getNpmVersions(name, registry);
+  if (versions && versions.length > 0) {
+    return versions.sort((a, b) => semverGt(a, b))[versions.length - 1];
+  }
+
+  return null;
+}
+
 module.exports = {
   getNpmInfo,
   getNpmSemverVersion,
+  getDefaultREgistry,
+  getNpmLatestVersion,
 };
