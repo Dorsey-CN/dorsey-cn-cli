@@ -119,7 +119,7 @@ class Package {
     }
 
     if (this.storeDir) {
-      return _getRootFilePath(tis.cacheFilePath);
+      return _getRootFilePath(this.cacheFilePath);
     } else {
       return _getRootFilePath(this.targetPath);
     }

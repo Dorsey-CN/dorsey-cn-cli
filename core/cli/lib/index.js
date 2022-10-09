@@ -4,7 +4,6 @@ const os = require("os");
 const path = require("path");
 const fs = require("fs");
 const log = require("@dorsey-cli-cn/log");
-const semverGte = require("semver/functions/gte");
 const semverGt = require("semver/functions/gt");
 const colors = require("colors");
 const rootCheck = require("root-check");
@@ -34,7 +33,6 @@ async function core() {
 // 脚手架准备阶段
 async function cliPrepare() {
   checkPkgVersion();
-  checkNodeVersion();
   checkRoot();
   checkUserHome();
   checkEnv();
@@ -137,18 +135,6 @@ function checkUserHome() {
 function checkRoot() {
   rootCheck();
   // console.log(process.geteuid());
-}
-
-// 检测node版本
-function checkNodeVersion() {
-  const currentVersion = process.version;
-  const lowestVersion = contants.LOWEST_NODE_VERSION;
-  if (!semverGte(currentVersion, lowestVersion)) {
-    throw new Error(
-      colors.red(`dorey-cli 要求node版本必须高于 v${lowestVersion} 版本`)
-    );
-  }
-  log.info("node_version", process.version);
 }
 
 // 检查应用版本

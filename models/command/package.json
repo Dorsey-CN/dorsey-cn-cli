@@ -1,7 +1,7 @@
 {
-  "name": "@dorsey-cli-cn/init",
-  "version": "1.0.1",
-  "description": "init project",
+  "name": "@dorsey-cli-cn/command",
+  "version": "1.0.0",
+  "description": "dorsey-cli-cn command",
   "author": "dorsey <406100205@qq.com>",
   "homepage": "https://github.com/Dorsey-CN/dorsey-cn-cli#readme",
   "license": "ISC",
@@ -21,16 +21,17 @@
     "url": "git+https://github.com/Dorsey-CN/dorsey-cn-cli.git"
   },
   "scripts": {
-    "test": "node ./__tests__/@dorsey-cli-cn/init.test.js"
+    "test": "node ./__tests__/@dorsey-cli-cn/command.test.js"
   },
   "bugs": {
     "url": "https://github.com/Dorsey-CN/dorsey-cn-cli/issues"
   },
+  "dependencies": {
+    "@dorsey-cli-cn/log": "file:../../utils/log",
+    "colors": "^1.4.0",
+    "semver": "^7.3.7"
+  },
   "devDependencies": {
     "@types/node": "^18.8.0"
-  },
-  "dependencies": {
-    "@dorsey-cli-cn/command": "file:../../models/command",
-    "@dorsey-cli-cn/log": "file:../../utils/log"
   }
 }
