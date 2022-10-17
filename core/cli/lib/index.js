@@ -78,7 +78,6 @@ function registerCommand() {
   // 如果未输入命令则输出帮助文档
   if (program.args && program.args.length < 1) {
     program.outputHelp();
-    console.log();
   }
 }
 
@@ -99,19 +98,15 @@ async function checkGlobalUpdate() {
 // 检测环境变量
 function checkEnv() {
   const dotenvPath = path.resolve(userHome, ".env");
+  const { cliFileName } = createDefaultConfig();
   if (!pathExists(dotenvPath)) {
-    fs.writeFileSync(
-      dotenvPath,
-      `CLI_HOME_PATH="${createDefaultConfig().cliFileName}"`
-    );
+    fs.writeFileSync(dotenvPath, `CLI_HOME_PATH="${cliFileName}"`);
   }
-  if (pathExists(dotenvPath)) {
-    dotenv.config({
-      path: dotenvPath,
-    });
-  }
-  process.env.CLI_HOME_PATH =
-    process.env.CLI_HOME_PATH || contants.DEFAULT_CLI_HOME;
+  dotenv.config({
+    path: dotenvPath,
+  });
+  // process.env.CLI_HOME_PATH = cliFileName;
+  console.log(process.env.CLI_HOME_PATH);
 }
 
 // 创建默认环境变量参数

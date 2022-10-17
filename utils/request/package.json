@@ -1,0 +1,32 @@
+{
+  "name": "@dorsey-cli-cn/request",
+  "version": "1.0.0",
+  "description": "dorsey-cli axios request",
+  "author": "dorsey <406100205@qq.com>",
+  "homepage": "https://github.com/Dorsey-CN/dorsey-cn-cli#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dorsey-CN/dorsey-cn-cli.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/@dorsey-cli-cn/request.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Dorsey-CN/dorsey-cn-cli/issues"
+  },
+  "dependencies": {
+    "axios": "^1.1.3"
+  }
+}

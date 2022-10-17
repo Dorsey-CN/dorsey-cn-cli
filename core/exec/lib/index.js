@@ -35,7 +35,6 @@ async function exec() {
       pkgVersion,
     });
     const packageExist = await pkg.exist();
-    console.log(packageExist);
     if (!packageExist) {
       await pkg.install();
     } else {

@@ -19,7 +19,7 @@ class Command {
     }
     // console.log(argv);
     this._argv = argv;
-    let runner = new Promise((resolve, reject) => {
+    let runner = new Promise(() => {
       let chain = Promise.resolve();
       chain = chain.then(() => this.checkNodeVersion());
       chain = chain.then(() => this.initArgs());
