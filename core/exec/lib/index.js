@@ -5,6 +5,7 @@ const os = require("os");
 const cp = require("child_process");
 const Package = require("@dorsey-cli-cn/package");
 const log = require("@dorsey-cli-cn/log");
+const { execAsync } = require("@dorsey-cli-cn/utils");
 
 // 命令name与脚手架包名name映射表
 const SETTINGS = {
@@ -65,30 +66,14 @@ async function exec() {
       });
       args[args.length - 1] = o;
       const code = `require('${rootFile}').call(null, ${JSON.stringify(args)})`;
-      const child = customSpawn("node", ["-e", code], {
+      await execAsync("node", ["-e", code], {
         cwd: process.cwd(),
         stdio: "inherit",
-      });
-      child.on("error", (e) => {
-        log.error(e.message);
-        process.exit(1);
-      });
-      child.on("exit", (e) => {
-        log.verbose("命令执行成功", e);
-        process.exit(e);
       });
     } catch (errMsg) {
       log.error(errMsg);
     }
   }
-}
-
-// 自定义执行spawn方法，为了兼容Windows系统
-function customSpawn(command, args, options) {
-  const isWin32 = process.platform === "win32";
-  const cmd = isWin32 ? "cmd" : command;
-  const cmdArgs = isWin32 ? ["/c"].concat(args) : args;
-  return cp.spawn(cmd, cmdArgs, options || {});
 }
 
 module.exports = exec;

@@ -8,14 +8,16 @@ const semver = require("semver");
 const Command = require("@dorsey-cli-cn/command");
 const log = require("@dorsey-cli-cn/log");
 const Package = require("@dorsey-cli-cn/package");
-const { spinnerStart, sleep, downloadHandle } = require("@dorsey-cli-cn/utils");
+const { spinnerStart, sleep, execAsync } = require("@dorsey-cli-cn/utils");
 const getProjectTemplate = require("./get-project-template");
 
-const TYPE_PROJECT = "project";
-const TYPE_COMPONENT = "component";
-
-const TYPE_TEMPLATE_NORMAL = "normal";
-const TYPE_TEMPLATE_CUSTOM = "custom";
+const {
+  TYPE_PROJECT,
+  TYPE_COMPONENT,
+  TYPE_TEMPLATE_NORMAL,
+  TYPE_TEMPLATE_CUSTOM,
+  COMMAND_WHITE_LIST,
+} = require("./constants");
 
 class InitCommand extends Command {
   init() {
@@ -39,6 +41,32 @@ class InitCommand extends Command {
       name: item.name,
       value: item.npmName,
     }));
+  }
+
+  // 检测命令是否在白名单内，防止恶意命令执行
+  checkCommand(command) {
+    return COMMAND_WHITE_LIST.includes(command);
+  }
+
+  // 命令执行
+  async execCommand(command, errorMsg) {
+    let res;
+    if (command) {
+      const commandArray = command.split(" ");
+      if (commandArray && commandArray.length > 1) {
+        const cmd = commandArray[0];
+        if (!this.checkCommand(cmd)) {
+          throw new Error(`命令：${cmd}不合法！`);
+        }
+        const args = commandArray.slice(1);
+        res = await execAsync(cmd, args, {
+          cwd: process.cwd(),
+          stdio: "inherit",
+        });
+      }
+    }
+    if (res !== 0) throw new Error(errorMsg);
+    return res;
   }
 
   // 准备阶段
@@ -78,7 +106,15 @@ class InitCommand extends Command {
           message: "是否确认清空当前目录下所有文件？",
         });
         if (deleteConfirm) {
-          fse.emptyDirSync(localPath);
+          const spinner = spinnerStart("清空目录中...");
+          await sleep();
+          try {
+            fse.emptyDirSync(localPath);
+          } catch (err) {
+            throw err;
+          } finally {
+            spinner.stop(true);
+          }
         } else {
           return null;
         }
@@ -230,6 +266,11 @@ class InitCommand extends Command {
     } else {
       throw new Error("项目模板信息不能存在");
     }
+    const { installCommand, startCommand } = this.templateInfo;
+    // 依赖安装
+    await this.execCommand(installCommand, "依赖安装过程失败！");
+    // 启动命令执行
+    await this.execCommand(startCommand, "启动命令执行过程失败！");
   }
 
   // 安装标准模板
