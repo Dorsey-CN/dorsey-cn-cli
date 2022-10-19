@@ -98,6 +98,8 @@ class Package {
         pkgs: [{ name: this.pkgName, version: latestPkgVersion }],
       });
       this.pkgVersion = latestPkgVersion;
+    } else {
+      this.pkgVersion = latestPkgVersion;
     }
   }
 

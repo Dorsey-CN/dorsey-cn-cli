@@ -27,6 +27,9 @@ async function core() {
     registerCommand();
   } catch (errMsg) {
     log.error(errMsg);
+    if (program.debug) {
+      console.log(errMsg);
+    }
   }
 }
 
@@ -56,8 +59,8 @@ function registerCommand() {
 
   // 处理debug模式
   program.on("option:debug", function () {
-    process.env.LOG_LEVERL = programOptions.debug ? "verbose" : "info";
-    log.level = process.env.LOG_LEVERL;
+    process.env.LOG_LEVEL = programOptions.debug ? "verbose" : "info";
+    log.level = process.env.LOG_LEVEL;
   });
 
   // 缓存本地调试文件路径到环境变量

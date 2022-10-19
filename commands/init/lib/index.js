@@ -5,6 +5,8 @@ const path = require("path");
 const inquirer = require("inquirer");
 const fse = require("fs-extra");
 const semver = require("semver");
+const glob = require("glob");
+const ejs = require("ejs");
 const Command = require("@dorsey-cli-cn/command");
 const log = require("@dorsey-cli-cn/log");
 const Package = require("@dorsey-cli-cn/package");
@@ -67,6 +69,45 @@ class InitCommand extends Command {
     }
     if (res !== 0) throw new Error(errorMsg);
     return res;
+  }
+
+  // ejs渲染
+  async ejsRender(optinos) {
+    return new Promise((resolve, reject) => {
+      const currentDir = process.cwd();
+      const projectInfo = this.projectInfo;
+      // 调用glob遍历获取当前路径所有符合条件的文件名称
+      glob(
+        "**",
+        {
+          cwd: currentDir,
+          ignore: optinos.ignore,
+          nodir: true,
+        },
+        (err, files) => {
+          if (err) reject(err);
+          // 循环对每一个上一步获取到的文件进行ejs'渲染
+          Promise.all(
+            files.map((file) => {
+              return new Promise((resolve1, reject1) => {
+                const filePath = path.resolve(currentDir, file);
+                ejs.renderFile(filePath, projectInfo, {}, (err, result) => {
+                  if (err) reject1(err);
+                  fse.writeFileSync(filePath, result);
+                  resolve1();
+                });
+              });
+            })
+          )
+            .then(() => {
+              resolve();
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        }
+      );
+    });
   }
 
   // 准备阶段
@@ -196,6 +237,15 @@ class InitCommand extends Command {
         type,
         ...info,
       };
+      if (projectInfo.projectName) {
+        projectInfo.name = projectInfo.projectName;
+        projectInfo.className = require("kebab-case")(
+          projectInfo.projectName
+        ).replace(/^-/, "");
+      }
+      if (projectInfo.projectVersion) {
+        projectInfo.version = projectInfo.projectVersion;
+      }
       this.projectInfo = projectInfo;
     }
     return projectInfo;
@@ -266,6 +316,9 @@ class InitCommand extends Command {
     } else {
       throw new Error("项目模板信息不能存在");
     }
+    await this.ejsRender({
+      ignore: ["node_modules/**", "public/**"],
+    });
     const { installCommand, startCommand } = this.templateInfo;
     // 依赖安装
     await this.execCommand(installCommand, "依赖安装过程失败！");
@@ -312,6 +365,7 @@ class InitCommand extends Command {
       }
     } catch (err) {
       log.error(err);
+      if (process.env.LOG_LEVEL === "verbose") console.log(err);
     }
   }
 }
