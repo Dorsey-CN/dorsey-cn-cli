@@ -1,6 +1,6 @@
 {
   "name": "@dorsey-cli-cn/package",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "dorsey-cli-cn node modules",
   "author": "dorsey <406100205@qq.com>",
   "homepage": "https://github.com/Dorsey-CN/dorsey-cn-cli#readme",
@@ -17,7 +17,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@dorsey-cli-cn/get-npm-info": "^1.0.2",
+    "@dorsey-cli-cn/get-npm-info": "^1.0.3",
     "@dorsey-cli-cn/log": "^1.0.2",
     "@dorsey-cli-cn/path-format": "^1.0.2",
     "@dorsey-cli-cn/utils": "^1.0.2",

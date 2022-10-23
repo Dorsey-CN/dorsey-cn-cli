@@ -1,6 +1,6 @@
 {
   "name": "@dorsey-cli-cn/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "dorsey-cli-cn core",
   "author": "dorsey <406100205@qq.com>",
   "homepage": "",
@@ -20,9 +20,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@dorsey-cli-cn/exec": "^1.0.2",
-    "@dorsey-cli-cn/get-npm-info": "^1.0.2",
-    "@dorsey-cli-cn/init": "^1.0.2",
+    "@dorsey-cli-cn/exec": "^1.0.3",
+    "@dorsey-cli-cn/get-npm-info": "^1.0.3",
+    "@dorsey-cli-cn/init": "^1.0.3",
     "@dorsey-cli-cn/log": "^1.0.2",
     "colors": "^1.4.0",
     "commander": "^9.4.1",
