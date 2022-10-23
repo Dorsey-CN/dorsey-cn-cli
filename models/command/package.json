@@ -27,7 +27,7 @@
     "url": "https://github.com/Dorsey-CN/dorsey-cn-cli/issues"
   },
   "dependencies": {
-    "@dorsey-cli-cn/log": "file:../../utils/log",
+    "@dorsey-cli-cn/log": "^1.0.2",
     "colors": "^1.4.0",
     "semver": "^7.3.7"
   },

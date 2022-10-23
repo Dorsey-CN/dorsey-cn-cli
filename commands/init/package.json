@@ -30,11 +30,11 @@
     "@types/node": "^18.8.0"
   },
   "dependencies": {
-    "@dorsey-cli-cn/command": "file:../../models/command",
-    "@dorsey-cli-cn/log": "file:../../utils/log",
-    "@dorsey-cli-cn/package": "file:../../models/package",
-    "@dorsey-cli-cn/request": "file:../../utils/request",
-    "@dorsey-cli-cn/utils": "file:../../utils/utils",
+    "@dorsey-cli-cn/command": "^1.0.2",
+    "@dorsey-cli-cn/log": "^1.0.2",
+    "@dorsey-cli-cn/package": "^1.0.2",
+    "@dorsey-cli-cn/request": "^1.0.2",
+    "@dorsey-cli-cn/utils": "^1.0.2",
     "ejs": "^3.1.8",
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",

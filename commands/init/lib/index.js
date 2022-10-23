@@ -86,7 +86,7 @@ class InitCommand extends Command {
         },
         (err, files) => {
           if (err) reject(err);
-          // 循环对每一个上一步获取到的文件进行ejs'渲染
+          // 循环对每一个上一步获取到的文件进行ejs渲染
           Promise.all(
             files.map((file) => {
               return new Promise((resolve1, reject1) => {
@@ -167,6 +167,12 @@ class InitCommand extends Command {
 
   // 获取项目基本信息
   async getProjectInfo() {
+    // 判断输入的项目名称是否符合规范
+    const _validateName = (name) => {
+      const rexp =
+        /^[a-zA-Z]([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*[a-zA-Z0-9]*$/;
+      return rexp.test(name);
+    };
     let projectInfo = {};
     // 选择创建项目or组件
     const { type } = await inquirer.prompt({
@@ -185,69 +191,99 @@ class InitCommand extends Command {
         },
       ],
     });
-    if (type === TYPE_PROJECT) {
-      const info = await inquirer.prompt([
-        {
-          type: "input",
-          name: "projectName",
-          message: "请输入项目名称",
-          default: this.projectName || "",
-          validate: function (v) {
-            const rexp =
-              /^[a-zA-Z]([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*[a-zA-Z0-9]$/;
-            const done = this.async();
+    this.projectTemplate = this.projectTemplate.filter((item) => {
+      return item.tag.includes(type);
+    });
+    const title = type === TYPE_PROJECT ? "项目" : "组件";
+    const projectPrompt = [
+      {
+        type: "input",
+        name: "projectVersion",
+        message: `请输入${title}版本号`,
+        default: "1.0.0",
+        validate: function (v) {
+          const done = this.async();
 
-            setTimeout(function () {
-              if (!rexp.test(v)) {
-                done("项目名称输入不合法");
-                return;
-              }
-              done(null, true);
-            }, 0);
-          },
+          setTimeout(function () {
+            if (!semver.valid(v)) {
+              done("版本号输入不合法");
+              return;
+            }
+            done(null, true);
+          }, 0);
         },
-        {
-          type: "input",
-          name: "projectVersion",
-          message: "请输入项目版本号",
-          default: "1.0.0",
-          validate: function (v) {
-            const done = this.async();
+        filter: (v) => {
+          return semver.valid(v) || v;
+        },
+      },
+      {
+        type: "list",
+        name: "projectTemplate",
+        message: `请选择要使用的${title}模板`,
+        choices: this.createProjectTemplateChoices(),
+      },
+    ];
+    const projectNamePrompt = {
+      type: "input",
+      name: "projectName",
+      message: `请输入${title}名称`,
+      default: "",
+      validate: function (v) {
+        const done = this.async();
 
-            setTimeout(function () {
-              if (!semver.valid(v)) {
-                done("版本号输入不合法");
-                return;
-              }
-              done(null, true);
-            }, 0);
-          },
-          filter: (v) => {
-            return semver.valid(v) || v;
-          },
+        setTimeout(function () {
+          if (!_validateName(v)) {
+            done(`${title}名称输入不合法`);
+            return;
+          }
+          done(null, true);
+        }, 0);
+      },
+    };
+    // 如果选择组件类型，则需要用户输入描述信息
+    if (type === TYPE_COMPONENT) {
+      projectPrompt.push({
+        type: "input",
+        name: "componentDesc",
+        message: "请输入组件描述信息",
+        default: "",
+        validate: function (v) {
+          const done = this.async();
+
+          setTimeout(function () {
+            if (!v) {
+              done("请输入组件描述信息");
+              return;
+            }
+            done(null, true);
+          }, 0);
         },
-        {
-          type: "list",
-          name: "projectTemplate",
-          message: "请选择要使用的项目模板",
-          choices: this.createProjectTemplateChoices(),
-        },
-      ]);
-      projectInfo = {
-        type,
-        ...info,
-      };
-      if (projectInfo.projectName) {
-        projectInfo.name = projectInfo.projectName;
-        projectInfo.className = require("kebab-case")(
-          projectInfo.projectName
-        ).replace(/^-/, "");
-      }
-      if (projectInfo.projectVersion) {
-        projectInfo.version = projectInfo.projectVersion;
-      }
-      this.projectInfo = projectInfo;
+      });
     }
+    // 检验用户命令上面输入的项目名称
+    const isLegitimateName = _validateName(this.projectName);
+    // 若是不合法，则要求用户重新输入，否则直接使用
+    if (!isLegitimateName) projectPrompt.unshift(projectNamePrompt);
+    const info = await inquirer.prompt(projectPrompt);
+    projectInfo = {
+      type,
+      ...info,
+    };
+    if (isLegitimateName) projectInfo.projectName = this.projectName;
+    // 下面重新赋值操作是为了模板ejs渲染提供参数
+    if (projectInfo.projectName) {
+      projectInfo.name = projectInfo.projectName;
+      projectInfo.className = require("kebab-case")(
+        projectInfo.projectName
+      ).replace(/^-/, "");
+    }
+    if (projectInfo.projectVersion) {
+      projectInfo.version = projectInfo.projectVersion;
+    }
+    if (projectInfo.componentDesc) {
+      projectInfo.description = projectInfo.componentDesc;
+    }
+    this.projectInfo = projectInfo;
     return projectInfo;
   }
 
@@ -316,14 +352,17 @@ class InitCommand extends Command {
     } else {
       throw new Error("项目模板信息不能存在");
     }
+    const templateIgnore = this.templateInfo.ignore || [];
     await this.ejsRender({
-      ignore: ["node_modules/**", "public/**"],
+      ignore: ["**/node_modules/**", ...templateIgnore],
     });
     const { installCommand, startCommand } = this.templateInfo;
-    // 依赖安装
-    await this.execCommand(installCommand, "依赖安装过程失败！");
-    // 启动命令执行
-    await this.execCommand(startCommand, "启动命令执行过程失败！");
+    if (installCommand && installCommand) {
+      // 依赖安装
+      await this.execCommand(installCommand, "依赖安装过程失败！");
+      // 启动命令执行
+      await this.execCommand(startCommand, "启动命令执行过程失败！");
+    }
   }
 
   // 安装标准模板

@@ -20,10 +20,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@dorsey-cli-cn/get-npm-info": "file:../../utils/get-npm-info",
-    "@dorsey-cli-cn/log": "file:../../utils/log",
-    "@dorsey-cli-cn/init": "file:../../commands/init",
-    "@dorsey-cli-cn/exec": "file:../exec",
+    "@dorsey-cli-cn/get-npm-info": "^1.0.2",
+    "@dorsey-cli-cn/log": "^1.0.2",
+    "@dorsey-cli-cn/init": "^1.0.2",
+    "@dorsey-cli-cn/exec": "^1.0.2",
     "colors": "^1.4.0",
     "commander": "^9.4.1",
     "dotenv": "^16.0.2",

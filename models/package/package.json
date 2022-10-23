@@ -17,10 +17,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@dorsey-cli-cn/get-npm-info": "file:../../utils/get-npm-info",
-    "@dorsey-cli-cn/log": "file:../../utils/log",
-    "@dorsey-cli-cn/path-format": "file:../../utils/path-format",
-    "@dorsey-cli-cn/utils": "file:../../utils/utils",
+    "@dorsey-cli-cn/get-npm-info": "^1.0.2",
+    "@dorsey-cli-cn/log": "^1.0.2",
+    "@dorsey-cli-cn/path-format": "^1.0.2",
+    "@dorsey-cli-cn/utils": "^1.0.2",
     "fs-extra": "^10.1.0",
     "npminstall": "^6.5.1",
     "path-exists": "^4.0.0",
